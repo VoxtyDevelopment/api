@@ -86,7 +86,6 @@ router.get('/licenses', ipWhitelistMiddleware, async (req, res) => {
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>License Keys</title>
-                <link rel="icon" href="https://i.imgur.com/2lAqmks.png" type="image/png">
                 <link rel="stylesheet" href="/style.css">
                 </style>
                 <script>
