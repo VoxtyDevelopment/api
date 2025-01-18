@@ -128,7 +128,7 @@ router.get('/licenses', ipWhitelistMiddleware, async (req, res) => {
                         event.preventDefault();
                         const formData = new FormData(event.target);
                         const data = Object.fromEntries(formData.entries());
-                        await fetch('/admin/master-edit-license', {
+                        await fetch('/admin/edit-license', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -288,34 +288,7 @@ router.post('/create-license', ipWhitelistMiddleware, async (req, res) => {
     }
 });
   
- router.post('/edit-license', ipWhitelistMiddleware, async (req, res) => {
-    const { licenseKey, authorizedIp } = req.body;
-  
-    if (!licenseKey || !authorizedIp) {
-      return res.status(400).json({ error: 'License key and authorized IP are required' });
-    }
-  
-    try {
-      const [result] = await promisePool.query(
-        'UPDATE Licenses SET authorized_ip = ? WHERE `key` = ?',
-        [authorizedIp, licenseKey]
-      );
-  
-      if (result.affectedRows > 0) {
-        logToDiscord(`License updated: ${licenseKey} with new IP ${authorizedIp}`);
-        res.status(200).json({ success: true });
-      } else {
-        logToDiscord('Failed to update license: No matching records found');
-        res.status(404).json({ error: 'No matching license found' });
-      }
-    } catch (err) {
-      console.error('Database error:', err);
-      logToDiscord(`Database error when updating license: ${err.message}`);
-      res.status(500).json({ error: 'Database error' });
-    }
-});
-  
- router.post('/master-edit-license', ipWhitelistMiddleware, async (req, res) => {
+router.post('/edit-license', ipWhitelistMiddleware, async (req, res) => {
     const { license_key, authorized_ip, username, product } = req.body;
   
     if (!license_key || !authorized_ip || !username || !product) {
